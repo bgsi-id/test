@@ -1,8 +1,21 @@
-version: '4.0'
+version: '1.0'
 
 actions:
   generate_dataset:
-    run: ehrql:v1 generate-dataset analysis/dataset_definition.py --output output/dataset.csv.gz
+    run:
+      ehrql-dev:latest
+        generate-dataset
+        --output output/dataset.csv
+        analysis/dataset_definition.py
     outputs:
       highly_sensitive:
-        dataset: output/dataset.csv.gz
+        dataset: output/dataset.csv
+
+  count_by_age:
+    run: >
+      python:latest
+        python analysis/count_by_age.py
+    needs: [generate_dataset]
+    outputs:
+      moderately_sensitive:
+        count: output/count_by_age.csv
